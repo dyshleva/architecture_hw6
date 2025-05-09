@@ -1,0 +1,3 @@
+Time: 2025-05-09 15:34:28.123
+Reason: Wrong question
+Description: Question do not formulated as yes/no question

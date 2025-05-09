@@ -1,0 +1,54 @@
+x-celery-worker-base: &celery-worker-base
+  build:
+    context: .
+    dockerfile: InnerDockerfile
+  networks:
+    - inner-network
+
+services:
+  redis:
+    image: redis
+    networks:
+      - inner-network
+  influx:
+    image: influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_ORG=architecture
+      - DOCKER_INFLUXDB_INIT_BUCKET=logging_bucket
+      - DOCKER_INFLUXDB_INIT_PASSWORD=superpassword
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=supertoken
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+    networks:
+      - inner-network
+
+  outter:
+    build:
+      context: .
+      dockerfile: OutterDockerfile
+    networks:
+      - inner-network
+    volumes:
+      - "./error_reports:/app/error_reports"
+    ports:
+      - "8000:8000"
+
+  inner:
+    build:
+      context: .
+      dockerfile: InnerDockerfile
+    networks:
+      - inner-network
+
+  worker1:
+    <<: *celery-worker-base
+    command: celery -A inner_service.celery worker --loglevel=info --hostname=worker1@%h
+
+  worker2:
+    <<: *celery-worker-base
+    command: celery -A inner_service.celery worker --loglevel=info --hostname=worker2@%h
+
+
+
+networks:
+  inner-network:

@@ -1,0 +1,7 @@
+uvicorn
+celery
+Redis
+requests
+fastapi
+influxdb_client
+pytz
