@@ -29,7 +29,7 @@ For low-I/O operations (e.g., submitting tasks), a small number of inner and out
 
 **Sum up.** Only in the case of 100 or more simultaneous connections does the system require significant horizontal scaling. At that point, we need to scale out client and business services to handle the increased load, add more Celery workers to maintain low task processing latency, and consider distributing InfluxDB and Redis or using a managed solution to ensure it can handle the high volume of log data efficiently.
 
-### RESULTS
+### Results
 1. Run ```podman compose up```:
 ![run](/img/run.png)
 2. App will be accessible on address ```http://localhost:8000```
